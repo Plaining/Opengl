@@ -126,6 +126,7 @@
     <ClCompile Include="helloBasicLighting.cpp" />
     <ClCompile Include="helloCamera.cpp" />
     <ClCompile Include="helloColor.cpp" />
+    <ClCompile Include="helloLightCaster.cpp" />
     <ClCompile Include="helloMaterial.cpp" />
     <ClCompile Include="helloTexture.cpp" />
     <ClCompile Include="helloTransformation.cpp" />
