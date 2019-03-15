@@ -123,12 +123,15 @@
   <ItemGroup>
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="glad.cpp" />
+    <ClCompile Include="helloBasicLighting.cpp" />
     <ClCompile Include="helloCamera.cpp" />
     <ClCompile Include="helloColor.cpp" />
+    <ClCompile Include="helloMaterial.cpp" />
     <ClCompile Include="helloTexture.cpp" />
     <ClCompile Include="helloTransformation.cpp" />
     <ClCompile Include="helloTriangle.cpp" />
     <ClCompile Include="helloworld.cpp" />
+    <ClCompile Include="LightingMaps.cpp" />
     <ClCompile Include="shader_s.cpp" />
   </ItemGroup>
   <ItemGroup>
