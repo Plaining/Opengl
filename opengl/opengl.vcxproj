@@ -133,6 +133,7 @@
     <ClCompile Include="helloTriangle.cpp" />
     <ClCompile Include="helloworld.cpp" />
     <ClCompile Include="LightingMaps.cpp" />
+    <ClCompile Include="MultipleLights.cpp" />
     <ClCompile Include="shader_s.cpp" />
   </ItemGroup>
   <ItemGroup>
