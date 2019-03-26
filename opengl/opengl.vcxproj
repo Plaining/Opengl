@@ -122,6 +122,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Coordinate.cpp" />
+    <ClCompile Include="depthTest.cpp" />
     <ClCompile Include="glad.cpp" />
     <ClCompile Include="helloBasicLighting.cpp" />
     <ClCompile Include="helloCamera.cpp" />
