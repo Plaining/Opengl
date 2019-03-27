@@ -66,6 +66,12 @@
     <ClCompile Include="blending.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="faceCulling.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeMaps.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader_s.h">

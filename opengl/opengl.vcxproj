@@ -123,7 +123,9 @@
   <ItemGroup>
     <ClCompile Include="blending.cpp" />
     <ClCompile Include="Coordinate.cpp" />
+    <ClCompile Include="CubeMaps.cpp" />
     <ClCompile Include="depthTest.cpp" />
+    <ClCompile Include="faceCulling.cpp" />
     <ClCompile Include="glad.cpp" />
     <ClCompile Include="helloBasicLighting.cpp" />
     <ClCompile Include="helloCamera.cpp" />

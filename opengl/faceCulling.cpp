@@ -40,8 +40,8 @@
 //#ifdef __APPLE__
 //	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
 //#endif
-//// glfw window creation
-//// --------------------
+//														 // glfw window creation
+//														 // --------------------
 //	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "^  V  ^", NULL, NULL);
 //	if (window == NULL)
 //	{
@@ -66,6 +66,8 @@
 //	glEnable(GL_DEPTH_TEST);
 //	glEnable(GL_BLEND);
 //	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	glEnable(GL_CULL_FACE);
+//	glCullFace(GL_FRONT);
 //
 //	Shader shader("shader_s.vs", "shader_s.fs");
 //
@@ -158,7 +160,7 @@
 //	glEnableVertexAttribArray(1);
 //	glBindVertexArray(0);
 //
-//	unsigned int planeVAO,planeVBO;
+//	unsigned int planeVAO, planeVBO;
 //	glGenVertexArrays(1, &planeVAO);
 //	glGenBuffers(1, &planeVBO);
 //	glBindVertexArray(planeVAO);
@@ -169,7 +171,7 @@
 //	glEnableVertexAttribArray(1);
 //	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 //	glBindVertexArray(0);
-//	
+//
 //	unsigned int vegetationVAO, vegetationVBO;
 //	glGenVertexArrays(1, &vegetationVAO);
 //	glGenBuffers(1, &vegetationVBO);
@@ -220,13 +222,13 @@
 //
 //		shader.setMat4("projection", projection);
 //		shader.setMat4("view", view);
-//		
+//
 //		glBindVertexArray(planeVAO);
 //		glBindTexture(GL_TEXTURE_2D, floorTexture);
 //		shader.setMat4("model", glm::mat4(1.0f));
 //		glDrawArrays(GL_TRIANGLES, 0, 6);
 //		glBindVertexArray(0);
-//		
+//
 //		glBindVertexArray(CubeVAO);
 //		glActiveTexture(GL_TEXTURE0);
 //		glBindTexture(GL_TEXTURE_2D, cubeTexture);
