@@ -121,6 +121,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="blending.cpp" />
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="depthTest.cpp" />
     <ClCompile Include="glad.cpp" />
