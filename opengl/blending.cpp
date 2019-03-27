@@ -64,6 +64,8 @@ int main() {
 		return -1;
 	}
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	Shader shader("shader_s.vs", "shader_s.fs");
 
@@ -182,7 +184,7 @@ int main() {
 
 	unsigned int cubeTexture = loadTexture("resource/container2.png");
 	unsigned int floorTexture = loadTexture("resource/test.jpg");
-	unsigned int grassTexture = loadTexture("resource/grass.png");
+	unsigned int grassTexture = loadTexture("resource/blending_transparent_window.png");
 
 	shader.use();
 	shader.setInt("texture1", 0);
@@ -199,8 +201,16 @@ int main() {
 		// -----
 		processInput(window);
 
+		std::map<float, glm::vec3> sorted;
+		for (unsigned int i = 0; i < vegetation.size(); i++)
+		{
+			float distance = glm::length(camera.Position - vegetation[i]);
+			sorted[distance] = vegetation[i];
+		}
+
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 
 		shader.use();
 		glm::mat4 view = camera.GetViewMatrix();
@@ -210,9 +220,8 @@ int main() {
 
 		shader.setMat4("projection", projection);
 		shader.setMat4("view", view);
-		//只想给两个箱子加上边框，并不让地板参与这个过程。因此首先绘制地板，再绘制两个箱子，将后绘制的两个箱子写入模板缓冲，之后再绘制放大的箱子，把两者重复的部分丢弃，只剩下边框。
 		
-		glBindVertexArray(planeVAO);//planeVAO存储的是地板的顶点
+		glBindVertexArray(planeVAO);
 		glBindTexture(GL_TEXTURE_2D, floorTexture);
 		shader.setMat4("model", glm::mat4(1.0f));
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -230,11 +239,16 @@ int main() {
 		shader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
+		//不透明渲染：1 先绘制所有不透明物体 2 排序透明物体 3 依次绘制透明物体
+
 		glBindVertexArray(vegetationVAO);
 		glBindTexture(GL_TEXTURE_2D, grassTexture);
-		for (unsigned int i = 0; i < vegetation.size(); i++) {
+
+
+		for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
+		{
 			model = glm::mat4(1.0f);
-			model = glm::translate(model, vegetation[i]);
+			model = glm::translate(model, it->second);
 			shader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
