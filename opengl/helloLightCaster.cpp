@@ -313,7 +313,7 @@
 //	stbi_image_free(data);
 //	return texture1;
 //}
-
+//
 //#version 330 core
 //struct Material {
 //	sampler2D diffuse;
