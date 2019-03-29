@@ -134,6 +134,7 @@
     <ClCompile Include="helloLightCaster.cpp" />
     <ClCompile Include="helloMaterial.cpp" />
     <ClCompile Include="helloModel.cpp" />
+    <ClCompile Include="helloRaycasting.cpp" />
     <ClCompile Include="helloTexture.cpp" />
     <ClCompile Include="helloTransformation.cpp" />
     <ClCompile Include="helloTriangle.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="MultipleLights.cpp" />
     <ClCompile Include="rayCasting.cpp" />
     <ClCompile Include="readRaw-RayCasting.cpp" />
+    <ClCompile Include="readRaw2.cpp" />
     <ClCompile Include="shader_s.cpp" />
   </ItemGroup>
   <ItemGroup>

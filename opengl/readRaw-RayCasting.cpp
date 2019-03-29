@@ -1,3 +1,4 @@
+//生成图像过小
 #define _CRT_SECURE_NO_WARNINGS
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -59,21 +60,22 @@ void display(void);
 void initVBO();
 void initShader();
 void initFrameBuffer(GLuint, GLuint, GLuint);
-GLuint initTFF1DTex(const char* filename);
+GLuint initTFF1DTex(const char* filename);//读取dat文件
 GLuint initFace2DTex(GLuint texWidth, GLuint texHeight);
-GLuint initVol3DTex(const char* filename, GLuint width, GLuint height, GLuint depth);
+GLuint initVol3DTex(const char* filename, GLuint width, GLuint height, GLuint depth);//读取raw文件
 void render(GLenum cullFace);
 void init()
 {
 	g_texWidth = g_winWidth;
 	g_texHeight = g_winHeight;
 	initVBO();
-	initShader();
+	initShader();//初始化
 	g_tffTexObj = initTFF1DTex("tff.dat");
 	g_bfTexObj = initFace2DTex(g_texWidth, g_texHeight);
 	g_volTexObj = initVol3DTex("head256.raw", 256, 256, 225);
+	//g_volTexObj = initVol3DTex("baby_face.raw",152,368,94);
 	GL_ERROR();
-	initFrameBuffer(g_bfTexObj, g_texWidth, g_texHeight);
+	initFrameBuffer(g_bfTexObj, g_texWidth, g_texHeight);//初始化帧缓冲
 	GL_ERROR();
 }
 // init the vertex buffer object
@@ -576,6 +578,7 @@ void render(GLenum cullFace)
 	// to make the "head256.raw" i.e. the volume data stand up.
 	model *= glm::rotate(90.0f, vec3(1.0f, 0.0f, 0.0f));
 	model *= glm::translate(glm::vec3(-0.5f, -0.5f, -0.5f));
+	//model *= glm::scale(model, glm::vec3(10000, 10000, 10000));
 	// notice the multiplication order: reverse order of transform
 	glm::mat4 mvp = projection * view * model;
 	GLuint mvpIdx = glGetUniformLocation(g_programHandle, "MVP");
@@ -594,7 +597,7 @@ void render(GLenum cullFace)
 }
 void rotateDisplay()
 {
-	g_angle = (g_angle + 1) % 360;
+	//g_angle = (g_angle + 1) % 360;
 	glutPostRedisplay();
 }
 void reshape(int w, int h)

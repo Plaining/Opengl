@@ -1,3 +1,4 @@
+////可以，但是结果是正方体和球，没有读取raw的功能
 //#include<stdio.h>
 //#include<stdlib.h>
 //#include<math.h>

@@ -1,9 +1,7 @@
 #version 400
-// 杜绝声明未使用的变量，避免bug的产生。
 
-
-in vec3 EntryPoint;
-in vec4 ExitPointCoord;
+in vec3 EntryPoint;//Color
+in vec4 ExitPointCoord;//gl_Posiction
 
 uniform sampler2D ExitPoints;
 uniform sampler3D VolumeTex;
@@ -16,7 +14,7 @@ void main()
 {
     // ExitPointCoord 的坐标是设备规范化坐标
     // 出现了和纹理坐标有关的问题。
-    vec3 exitPoint = texture(ExitPoints, gl_FragCoord.st/ScreenSize).xyz;
+    vec3 exitPoint = texture(ExitPoints, gl_FragCoord.xy/ScreenSize).xyz;
     // that will actually give you clip-space coordinates rather than
     // normalised device coordinates, since you're not performing the perspective
     // division which happens during the rasterisation process (between the vertex

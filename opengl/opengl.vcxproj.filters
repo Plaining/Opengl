@@ -78,6 +78,12 @@
     <ClCompile Include="readRaw-RayCasting.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="readRaw2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="helloRaycasting.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader_s.h">
