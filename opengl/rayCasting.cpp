@@ -88,7 +88,8 @@
 //		{
 //			for (int i = x; i<max_x; i++)
 //			{
-//				Data[k*Dimxy + j*Dim[0] + i] = density;
+//				Data[k*Dimxy + j*Dim[0] + i] = density;//.raw voxel=k*Dimxy + j*Dim[0] + i
+//				//so,Data[voxel]的值在.raw中存储,在这里也就暂时用density定义存的值，全都存为一个值。
 //			}
 //		}
 //	}
@@ -114,7 +115,7 @@
 //			{
 //				if ((i - x)*(i - x) + (j - y)*(j - y) + (k - z)*(k - z) <= radius2)
 //				{
-//					Data[k*Dimxy + j*Dim[0] + i] = density;
+//					Data[k*Dimxy + j*Dim[0] + i] = density;//存了一个球形的值
 //				}
 //			}
 //		}
@@ -139,7 +140,7 @@
 //		{
 //			for (int i = 0; i<Dim[0]; i++)
 //			{
-//				if (LinePS[0] <= 100)
+//				if (LinePS[0] <= 100)//即density的值=100，符合条件，因此这些点的颜色全都设定为（1，1，1，0.005）
 //				{
 //					//白色
 //					LinePD[0] = 1.0;
