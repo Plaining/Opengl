@@ -579,9 +579,6 @@ void keyboard(unsigned char key, int x, int y)
 	case '\x1B':
 		exit(EXIT_SUCCESS);
 		break;
-	case '100':
-		camera.ProcessKeyboard(FORWARD, deltaTime);
-		break;
 	}
 }
 
