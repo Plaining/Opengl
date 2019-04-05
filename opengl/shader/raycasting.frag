@@ -12,7 +12,7 @@ layout (location = 0) out vec4 FragColor;
 
 void main()
 {
-    vec3 exitPoint = texture(ExitPoints, gl_FragCoord.xy/ScreenSize).xyz;
+    vec3 exitPoint = texture(ExitPoints, gl_FragCoord.st/ScreenSize).xyz;
   
     if (EntryPoint == exitPoint)
     	//background need no raycasting
