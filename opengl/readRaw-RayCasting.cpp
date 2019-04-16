@@ -15,7 +15,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "camera.h"
 
-
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 #define GL_ERROR() checkForOpenGLError(__FILE__, __LINE__)
@@ -39,7 +38,8 @@ GLuint g_rcFragHandle;
 GLuint g_bfVertHandle;
 GLuint g_bfFragHandle;
 float g_stepSize = 0.001f;
-
+unsigned int xOffset = 0.0f;
+unsigned int yOffset = 0.0f;
 
 int checkForOpenGLError(const char* file, int line)
 {
@@ -74,7 +74,9 @@ void init()
 	initShader();//初始化
 	g_tffTexObj = initTFF1DTex("tff.dat");
 	g_bfTexObj = initFace2DTex(g_texWidth, g_texHeight);
-	g_volTexObj = initVol3DTex("head256.raw", 256, 256, 225);
+	//g_volTexObj = initVol3DTex("head256.raw", 256, 256, 225);
+	//g_volTexObj = initVol3DTex("baby_face.raw", 152, 368, 94);
+	//g_volTexObj = initVol3DTex("head-128x128x113.den", 128, 128, 113);
 	GL_ERROR();
 	initFrameBuffer(g_bfTexObj, g_texWidth, g_texHeight);//初始化帧缓冲
 	GL_ERROR();
@@ -225,7 +227,6 @@ GLint checkShaderLinkStatus(GLuint pgmHandle)
 // link shader program
 GLuint createShaderPgm()
 {
-	// Create the shader program
 	GLuint programHandle = glCreateProgram();
 	if (0 == programHandle)
 	{
@@ -235,11 +236,8 @@ GLuint createShaderPgm()
 	return programHandle;
 }
 
-
-// init the 1 dimentional texture for transfer function
 GLuint initTFF1DTex(const char* filename)
 {
-//	 read in the user defined data of transfer function
 	ifstream inFile(filename, ifstream::in);
 	if (!inFile)
 	{
@@ -275,7 +273,6 @@ GLuint initTFF1DTex(const char* filename)
 	free(tff);
 	return tff1DTex;
 }
-// init the 2D texture for render backface 'bf' stands for backface
 GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight)
 {
 	GLuint backFace2DTex;
@@ -288,13 +285,12 @@ GLuint initFace2DTex(GLuint bfTexWidth, GLuint bfTexHeight)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bfTexWidth, bfTexHeight, 0, GL_RGBA, GL_FLOAT, NULL);
 	return backFace2DTex;
 }
-// init 3D texture to store the volume data used fo ray casting
 GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d)
 {
 
 	FILE *fp;
 	unsigned int size = w * h * d;
-	GLubyte *data = new GLubyte[size];			  // 8bit
+	unsigned char *data = new unsigned char[size];			  // 8bit
 	if (!(fp = fopen(filename, "rb")))
 	{
 		cout << "Error: opening .raw file failed" << endl;
@@ -324,7 +320,6 @@ GLuint initVol3DTex(const char* filename, GLuint w, GLuint h, GLuint d)
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexImage3D(GL_TEXTURE_3D, 0, GL_INTENSITY, w, h, d, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, data);
-
 	delete[]data;
 	cout << "volume texture created" << endl;
 	return g_volTexObj;
@@ -339,32 +334,23 @@ void checkFramebufferStatus()
 		exit(EXIT_FAILURE);
 	}
 }
-// init the framebuffer, the only framebuffer used in this program
 void initFrameBuffer(GLuint texObj, GLuint texWidth, GLuint texHeight)
 {
-//	 create a depth buffer for our framebuffer
 	GLuint depthBuffer;
 	glGenRenderbuffers(1, &depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, texWidth, texHeight);
 
-//	 attach the texture and the depth buffer to the framebuffer
 	glGenFramebuffers(1, &g_frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, g_frameBuffer);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texObj, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);//将渲染缓冲对象附加到帧缓冲的深度和模板附件上
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 	checkFramebufferStatus();
 	glEnable(GL_DEPTH_TEST);
 }
 
 void rcSetUinforms()
 {
-//	 setting uniforms such as
-//	 ScreenSize 
-//	 StepSize
-//	 TransferFunc
-//	 ExitPoints i.e. the backface, the backface hold the ExitPoints of ray casting
-//	 VolumeTex the texture that hold the volume data i.e. head256.raw
 	GLint screenSizeLoc = glGetUniformLocation(g_programHandle, "ScreenSize");
 	if (screenSizeLoc >= 0)
 	{
@@ -398,9 +384,9 @@ void rcSetUinforms()
 	}
 	else
 	{
-		cout << "TransferFunc"
+		/*cout << "TransferFunc"
 			<< "is not bind to the uniform"
-			<< endl;
+			<< endl;*/
 	}
 	GL_ERROR();
 	GLint backFaceLoc = glGetUniformLocation(g_programHandle, "ExitPoints");
@@ -445,7 +431,6 @@ void initShader()
 	g_rcFragHandle = initShaderObj("shader/raycasting.frag", GL_FRAGMENT_SHADER);
 	 //create the shader program , use it in an appropriate time
 	g_programHandle = createShaderPgm();
-//	 获得由着色器编译器分配的索引(可选)
 }
 
 // link the shader objects using the shader program
@@ -478,22 +463,6 @@ void linkShader(GLuint shaderPgm, GLuint newVertHandle, GLuint newFragHandle)
 	GL_ERROR();
 }
 
-// the color of the vertex in the back face is also the location
-// of the vertex
-// save the back face to the user defined framebuffer bound
-// with a 2D texture named `g_bfTexObj`
-// draw the front face of the box
-// in the rendering process, i.e. the ray marching process
-// loading the volume `g_volTexObj` as well as the `g_bfTexObj`
-// after vertex shader processing we got the color as well as the location of
-// the vertex (in the object coordinates, before transformation).
-// and the vertex assemblied into primitives before entering
-// fragment shader processing stage.
-// in fragment shader processing stage. we got `g_bfTexObj`
-// (correspond to 'VolumeTex' in glsl)and `g_volTexObj`(correspond to 'ExitPoints')
-// as well as the location of primitives.
-// the most important is that we got the GLSL to exec the logic. Here we go!
-// draw the back face of the box
 void display()
 {
 	glEnable(GL_DEPTH_TEST);
@@ -501,7 +470,7 @@ void display()
 	GL_ERROR();
 	// render to texture
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_frameBuffer);
-	glViewport(0, 0, g_winWidth, g_winHeight);
+	glViewport(xOffset, yOffset, g_winWidth, g_winHeight);
 	linkShader(g_programHandle, g_bfVertHandle, g_bfFragHandle);
 	glUseProgram(g_programHandle);
 	// cull front face
@@ -509,7 +478,7 @@ void display()
 	glUseProgram(0);
 	GL_ERROR();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, g_winWidth, g_winHeight);
+	glViewport(xOffset, yOffset, g_winWidth, g_winHeight);
 	linkShader(g_programHandle, g_rcVertHandle, g_rcFragHandle);
 	GL_ERROR();
 	glUseProgram(g_programHandle);
@@ -520,25 +489,18 @@ void display()
 	GL_ERROR();
 	glutSwapBuffers();
 }
-// both of the two pass use the "render() function"
-// the first pass render the backface of the boundbox
-// the second pass render the frontface of the boundbox
-// together with the frontface, use the backface as a 2D texture in the second pass
-// to calculate the entry point and the exit point of the ray in and out the box.
 void render(GLenum cullFace)
 {
 	GL_ERROR();
-	glClearColor(0.7f, 0.3f, 0.2f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//  transform the box
 	glm::mat4 view = camera.GetViewMatrix();
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (GLfloat)g_winWidth / g_winHeight, 0.1f, 200.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (GLfloat)g_winWidth / g_winHeight, 0.1f, 800.0f);
 	glm::mat4 model = glm::mat4(1.0f);
-	//glm::mat4 projection = glm::perspective(60.0f, (GLfloat)g_winWidth / g_winHeight, 0.1f, 800.f);
-	//glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f),glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3(0.0f, 1.0f, 0.0f));
-	model *= glm::rotate((float)g_angle, glm::vec3(0.0f, 1.0f, 0.0f));
+	model *= glm::rotate((float)g_angle/50, glm::vec3(0.0f, 1.0f, 0.0f));
 	// to make the "head256.raw" i.e. the volume data stand up.
-	model *= glm::rotate(90.0f, vec3(1.0f,0.0f, 0.0f));
+	model *= glm::rotate(90.0f, vec3(1.0f, 0.0f, 0.0f));
 	model *= glm::translate(glm::vec3(-0.5f, -0.5f, -0.5f));
 	glm::mat4 mvp = projection * view * model;
 	GLuint mvpIdx = glGetUniformLocation(g_programHandle, "MVP");
@@ -553,7 +515,7 @@ void render(GLenum cullFace)
 	GL_ERROR();
 	drawBox(cullFace);
 	GL_ERROR();
-	// glutWireTeapot(0.5);
+	//glutWireTeapot(0.5);
 }
 void rotateDisplay()
 {
@@ -569,11 +531,7 @@ void reshape(int w, int h)
 }
 
 void keyboard(unsigned char key, int x, int y)
-{/*
-	GLUT_KEY_LEFT			100
-#define GLUT_KEY_UP			101
-#define GLUT_KEY_RIGHT			102
-#define GLUT_KEY_DOWN			103*/
+{
 	switch (key)
 	{
 	case '\x1B':
@@ -582,6 +540,30 @@ void keyboard(unsigned char key, int x, int y)
 	}
 }
 
+void SpecialKey(GLint key, GLint x, GLint y)
+{
+	if (key == GLUT_KEY_UP)
+	{
+		camera.ProcessKeyboard(FORWARD, 0.001);
+		//yOffset += 10;
+	}
+	if (key == GLUT_KEY_LEFT)
+	{
+		camera.ProcessKeyboard(LEFT, 0.001);
+		//xOffset -= 10;
+	}
+	if (key == GLUT_KEY_DOWN)
+	{
+		camera.ProcessKeyboard(BACKWARD, 0.001);
+		//yOffset -= 10;
+	}
+	if (key == GLUT_KEY_RIGHT)
+	{
+		camera.ProcessKeyboard(RIGHT, 0.001);
+		//xOffset += 10;
+	}
+	display();
+}
 int main(int argc, char** argv)
 {
 
@@ -597,6 +579,8 @@ int main(int argc, char** argv)
 	}
 
 	glutKeyboardFunc(&keyboard);
+	glutSpecialFunc(&SpecialKey);
+
 	glutDisplayFunc(&display);
 	glutReshapeFunc(&reshape);
 	glutIdleFunc(&rotateDisplay);
@@ -604,4 +588,3 @@ int main(int argc, char** argv)
 	glutMainLoop();
 	return EXIT_SUCCESS;
 }
-

@@ -84,6 +84,9 @@
     <ClCompile Include="helloRaycasting.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="view-raycasting.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader_s.h">
@@ -99,6 +102,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
