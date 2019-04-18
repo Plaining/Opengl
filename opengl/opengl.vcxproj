@@ -126,6 +126,7 @@
     <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="CubeMaps.cpp" />
     <ClCompile Include="depthTest.cpp" />
+    <ClCompile Include="engine.cpp" />
     <ClCompile Include="faceCulling.cpp" />
     <ClCompile Include="glad.cpp" />
     <ClCompile Include="helloBasicLighting.cpp" />
