@@ -12,9 +12,8 @@ layout (location = 0) out vec4 FragColor;
 
 void main()
 {
-    //vec2 texc = ((ExitPointCoord.xy/ExitPointCoord.w) + 1.0f)/2.0f;
-    //vec3 exitPoint = texture(ExitPoints, texc).xyz;
-    vec3 exitPoint = texture(ExitPoints, gl_FragCoord.st/ScreenSize).xyz;
+    //vec3 exitPoint = texture(ExitPoints, gl_FragCoord.st/ScreenSize).xyz;
+    vec3 exitPoint = texture(ExitPoints, gl_FragCoord.st/vec2(800.0f,800.0f)).xyz;
   
     if (EntryPoint == exitPoint)
         discard;
@@ -32,37 +31,23 @@ void main()
     vec4 bgColor = vec4(1.0, 1.0, 1.0, 0.0);
     for(int i = 0; i < 1600; i++)
     {
-        /*intensity =  texture(VolumeTex, voxelCoord).x;
-        colorSample = texture(TransferFunc, intensity);
-        if( colorSample.a <= 0){
-            break;
-        }
-        colorSample.a = 1.0 - pow(1.0 - colorSample.a, StepSize*200.0f);
-        colorAcum.rgb += (1.0 - colorAcum.a) * colorSample.rgb * colorSample.a;
-        colorAcum.a += (1.0 - colorAcum.a) * colorSample.a;
-        voxelCoord += deltaDir;
-        lengthAcum += deltaDirLen;
-        */
         colorSample = texture(VolumeTex, voxelCoord);
-        colorSample.a = 1.0 - pow(1.0 - colorSample.a, StepSize*200.0f);
-        if( colorSample.a <= 0){
+        colorSample.a = 1.0 - pow(1.0 - colorSample.a, StepSize * 200.0f);
+        if( colorSample.x <= 0){
             break;
         }
-        if(colorSample.a > 135){
-            alphaSample = 1.0;
+        if(colorSample.x > 135){
+            colorSample.a = 1.0;
         }
-        else if(colorSample.a>35 && colorSample.a < 135){
-            alphaSample = (colorSample.a-35)/100;
+        else if(colorSample.x > 35 && colorSample.x <= 135){
+            colorSample.a  = (colorSample.x - 35) / 100;
         }
-        else if(colorSample.a < 35){
-            alphaSample = colorSample.a * StepSize;
-            //alphaSample = 0;
+        else if(colorSample.x < 35){
+            //colorSample.a = colorSample.x * StepSize;
+            colorSample.a = 0;
         }
-        colorAcum.rgb += (1.0 - colorAcum.a) * colorSample.rgb * colorSample.a * 3;
+        colorAcum.rgb += (1.0 - colorAcum.a) * colorSample.rgb * colorSample.a * 3 ;
         colorAcum.a += (1.0 - colorAcum.a) * colorSample.a;
-        //colorAcum += (1.0 - alphaAcum) * colorSample*alphaSample*3;
-        //alphaAcum += alphaSample;
-        //alphaAcum += (1.0 - alphaAcum) * alphaSample;
         voxelCoord += deltaDir;
         lengthAcum += deltaDirLen;
         

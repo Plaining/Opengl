@@ -23,8 +23,8 @@ using glm::mat4;
 using glm::vec3;
 GLuint g_vao;
 GLuint g_programHandle;
-GLuint g_winWidth = 800;//800
-GLuint g_winHeight = 800;//800
+GLuint g_winWidth = 800;
+GLuint g_winHeight = 800;
 GLint g_angle = 0;
 GLuint g_frameBuffer;
 // transfer function
@@ -72,8 +72,8 @@ void init()
 	initShader();//≥ı ºªØ
 	g_tffTexObj = initTFF1DTex("tff.dat", 256, 256, 225);
 	g_bfTexObj = initFace2DTex(g_texWidth, g_texHeight);
-	g_volTexObj = initVol3DTex("head256.raw", 256, 256, 225);
-	//g_volTexObj = initVol3DTex("baby_face.raw", 152, 368, 94);
+	//g_volTexObj = initVol3DTex("head256.raw", 256, 256, 225);
+	g_volTexObj = initVol3DTex("baby_face.raw", 152, 368, 94);
 	//g_volTexObj = initVol3DTex("head-128x128x113.den", 128, 128, 113);
 	//g_volTexObj = initVol3DTex("FOOT.RAW", 256, 256, 225);
 	GL_ERROR();
@@ -237,46 +237,6 @@ GLuint createShaderPgm()
 
 GLuint initTFF1DTex(const char* filename,GLuint w, GLuint h, GLuint d)
 {
-	/*FILE *fp;
-	unsigned int size = w * h * d;
-	unsigned char *data = new unsigned char[size];			  // 8bit
-	if (!(fp = fopen(filename, "rb")))
-	{
-		cout << "Error: opening .raw file failed" << endl;
-		exit(EXIT_FAILURE);
-	}
-	else
-	{
-		cout << "OK: open .raw file successed" << endl;
-	}
-	if (fread(data, sizeof(char), size, fp) != size)
-	{
-		cout << "Error: read .raw file failed" << endl;
-		exit(1);
-	}
-	else
-	{
-		cout << "OK: read .raw file successed" << endl;
-	}
-	fclose(fp);
-	unsigned char *tff = new unsigned char[size];
-	for (int i = 0; i < size; i++) {
-		if (data[i] < 35) {
-			tff[i] = 0;
-		}
-		else if (data[i] > 135) {
-			tff[i] = 1;
-		}
-		else if (data[i]< 135&&data[i]>35){
-			tff[i] = (data[i] - 35) / 100;
-		}
-	}
-	GLubyte tff[4][3] = {
-		10,  0, 0,
-		55,  0, 0,
-		135, 0, 0,
-		255, 0, 0
-	};*/
 	ifstream inFile(filename, ifstream::in);
 	if (!inFile)
 	{
@@ -541,11 +501,12 @@ void render(GLenum cullFace)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//  transform the box
 	glm::mat4 view = camera.GetViewMatrix();
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (GLfloat)g_winWidth / g_winHeight, 0.1f, 400.0f);
+	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (GLfloat)g_winWidth / g_winHeight, 0.1f, 400.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (GLfloat)g_winWidth / g_winHeight, 0.1f, 100.0f);
 	glm::mat4 model = glm::mat4(1.0f);
-	model *= glm::rotate((float)g_angle/50, glm::vec3(0.0f, 1.0f, 0.0f));
+	model *= glm::rotate((float)g_angle/50, glm::vec3(0.0f, 0.5f, 0.0f));
 	// to make the "head256.raw" i.e. the volume data stand up.
-	model *= glm::rotate(90.0f, vec3(1.0f, 0.0f, 0.0f));
+	model *= glm::rotate(90.0f, vec3(0.5f, 0.0f, 0.0f));
 	model *= glm::translate(glm::vec3(-0.5f, -0.5f, -0.5f));
 	glm::mat4 mvp = projection * view * model;
 	GLuint mvpIdx = glGetUniformLocation(g_programHandle, "MVP");
