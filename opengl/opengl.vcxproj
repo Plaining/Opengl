@@ -147,6 +147,7 @@
     <ClCompile Include="readRaw-RayCasting.cpp" />
     <ClCompile Include="readRaw2.cpp" />
     <ClCompile Include="shader_s.cpp" />
+    <ClCompile Include="tidutest.cpp" />
     <ClCompile Include="view-raycasting.cpp" />
   </ItemGroup>
   <ItemGroup>
